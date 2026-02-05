@@ -1,0 +1,19 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+<h1>{{ task.title }}</h1>
+<p><strong>Status:</strong> {{ task.status }}</p>
+<p><strong>Description:</strong> {{ task.description }}</p>
+<p><strong>Owner:</strong> {{ task.owner.username }}</p>
+<p><strong>Created at:</strong> {{ task.created_at }}</p>
+<p><strong>Updated at:</strong> {{ task.updated_at }}</p>
+
+{% if task.owner == user %}
+<p>
+<a href="{% url 'tasks:task_update' task.id %}">Edit</a> |
+<a href="{% url 'tasks:task_delete' task.id %}">Delete</a>
+</p>
+{% endif %}
+
+<p><a href="{% url 'tasks:task_list' %}">Back to all tasks</a></p>
+{% endblock %}

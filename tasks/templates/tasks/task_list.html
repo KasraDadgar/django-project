@@ -1,0 +1,49 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+<h1>Tasks</h1>
+
+<div style="float:right">
+<form method="get">
+  <input type="text" placeholder="Search.." name="search"
+    {% if request.GET.search %} value="{{ request.GET.search }}" {% endif %}>
+  <button type="submit"><i class="fa fa-search"></i></button>
+  <a href="{% url 'tasks:task_list' %}"><i class="fa fa-undo"></i></a>
+</form>
+</div>
+
+<p>
+{% if task_list %}
+<ul>
+  {% for task in task_list %}
+    <li>
+        <a href="{% url 'tasks:task_detail' task.id %}">{{ task.title }}</a>
+        (Status: {{ task.status }})
+
+        {% if task.owner == user %}
+        |
+        <a href="{% url 'tasks:task_update' task.id %}">Edit</a> |
+        <a href="{% url 'tasks:task_delete' task.id %}">Delete</a>
+        {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>No tasks found.</p>
+{% endif %}
+</p>
+
+<p>
+<a href="{% url 'tasks:task_create' %}">Add a Task</a> 
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'logout' %}" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-link p-0">Logout</button>
+</form>
+
+{% else %}
+<a href="{% url 'login' %}?next={% url 'tasks:task_list' %}">Login</a>
+{% endif %}
+</p>
+
+{% endblock %}

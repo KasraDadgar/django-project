@@ -20,15 +20,12 @@ class TaskListCreateAPI(generics.ListCreateAPIView):
 
 
 class TaskDetailAPI(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated:
-            return Task.objects.all()
-        return Task.objects.none()
+        return Task.objects.filter(owner=self.request.user)
+
 
 
 ############################################################################################
